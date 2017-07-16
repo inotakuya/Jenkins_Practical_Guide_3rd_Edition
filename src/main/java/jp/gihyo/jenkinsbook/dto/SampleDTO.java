@@ -1,9 +1,11 @@
 package jp.gihyo.jenkinsbook.dto;
 
+import java.io.Serializable;
+
 /**
  * DTO class for SampleServlet.
  */
-public class SampleDTO  {
+public class SampleDTO implements Serializable {
     /**
      * First name of the user.
      */
@@ -19,6 +21,7 @@ public class SampleDTO  {
 
     /**
      * Store the user name.
+     * 
      * @param fName first name of the user
      * @param lName last name of the user
      */
@@ -30,6 +33,7 @@ public class SampleDTO  {
 
     /**
      * Get first name of the user.
+     * 
      * @return first name of the user
      */
     public final String getFirstName() {
@@ -38,6 +42,7 @@ public class SampleDTO  {
 
     /**
      * Get last name of the user.
+     * 
      * @return last name of the user
      */
     public final String getLastName() {
@@ -46,6 +51,7 @@ public class SampleDTO  {
 
     /**
      * Get greeting message.
+     * 
      * @return greeting message
      */
     public final String getMessage() {
@@ -54,6 +60,7 @@ public class SampleDTO  {
 
     /**
      * Set first name of the user.
+     * 
      * @param fName first name of the user
      */
     public final void setFirstName(final String fName) {
@@ -62,6 +69,7 @@ public class SampleDTO  {
 
     /**
      * Set last name of the user.
+     * 
      * @param lName last name of the user
      */
     public final void setLastName(final String lName) {
@@ -70,6 +78,7 @@ public class SampleDTO  {
 
     /**
      * Set greeting message.
+     * 
      * @param msg greeting message
      */
     public final void setMessage(final String msg) {

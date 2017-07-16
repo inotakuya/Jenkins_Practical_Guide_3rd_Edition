@@ -93,6 +93,6 @@ public class SampleActionTest {
     
     @Test
     public void testError(){
-        System.out.println("aaaadffgsdfadfasgsdfasddsf");
+        System.out.println("aaaadffgsdfadfasasdfgsdfasddsf");
     }
 }

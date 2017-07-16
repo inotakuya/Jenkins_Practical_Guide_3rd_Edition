@@ -54,18 +54,18 @@ public class SampleDTO  {
 
     /**
      * Set first name of the user.
-     * @param firstName first name of the user
+     * @param fName first name of the user
      */
-    public final void setFirstName(final String firstName) {
-        this.firstName = firstName;
+    public final void setFirstName(final String fName) {
+        this.firstName = fName;
     }
 
     /**
      * Set last name of the user.
-     * @param lastName last name of the user
+     * @param lName last name of the user
      */
-    public final void setLastName(final String lastName) {
-        this.lastName = lastName;
+    public final void setLastName(final String lName) {
+        this.lastName = lName;
     }
 
     /**

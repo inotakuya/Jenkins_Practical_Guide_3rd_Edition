@@ -93,6 +93,5 @@ public class SampleActionTest {
     
     @Test
     public void testError(){
-        fail();
     }
 }

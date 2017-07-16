@@ -14,80 +14,80 @@ import javax.servlet.http.HttpSession;
 
 public class SampleActionTest {
 
-	public static void main(String[] args) {
-		JUnitCore.main(SampleActionTest.class.getName());
-	}
+    public static void main(String[] args) {
+        JUnitCore.main(SampleActionTest.class.getName());
+    }
 
-	@Test
-	public void testCheckNormal() {
-		SampleAction action = new SampleAction();
-		HttpServletRequest request = createMock(HttpServletRequest.class);
+    @Test
+    public void testCheckNormal() {
+        SampleAction action = new SampleAction();
+        HttpServletRequest request = createMock(HttpServletRequest.class);
 
-		expect(request.getParameter("FirstName")).andReturn("firstName");
-		expect(request.getParameter("LastName")).andReturn("lastName");
+        expect(request.getParameter("FirstName")).andReturn("firstName");
+        expect(request.getParameter("LastName")).andReturn("lastName");
 
-		replay(request);
-		boolean result = action.checkParameter(request);
-		verify(request);
+        replay(request);
+        boolean result = action.checkParameter(request);
+        verify(request);
 
-		assertEquals(true, result);
-	}
+        assertEquals(true, result);
+    }
 
-	@Test
-	public void testCheckError1() {
-		SampleAction action = new SampleAction();
-		HttpServletRequest request = createMock(HttpServletRequest.class);
+    @Test
+    public void testCheckError1() {
+        SampleAction action = new SampleAction();
+        HttpServletRequest request = createMock(HttpServletRequest.class);
 
-		expect(request.getParameter("FirstName")).andReturn(null);
+        expect(request.getParameter("FirstName")).andReturn(null);
 
-		replay(request);
-		boolean result = action.checkParameter(request);
-		verify(request);
+        replay(request);
+        boolean result = action.checkParameter(request);
+        verify(request);
 
-		assertEquals(false, result);
-	}
+        assertEquals(false, result);
+    }
 
-	@Test
-	public void testCheckError2() {
-		HttpServletRequest request = createMock(HttpServletRequest.class);
-		SampleAction action = new SampleAction();
+    @Test
+    public void testCheckError2() {
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        SampleAction action = new SampleAction();
 
-		expect(request.getParameter("FirstName")).andReturn("firstName");
-		expect(request.getParameter("LastName")).andReturn(null);
+        expect(request.getParameter("FirstName")).andReturn("firstName");
+        expect(request.getParameter("LastName")).andReturn(null);
 
-		replay(request);
-		boolean result = action.checkParameter(request);
-		verify(request);
+        replay(request);
+        boolean result = action.checkParameter(request);
+        verify(request);
 
-		assertEquals(false, result);
-	}
-	
-	@Test
-	public void testCheckError3() {
-		SampleAction action = new SampleAction();
-		HttpServletRequest request = createMock(HttpServletRequest.class);
+        assertEquals(false, result);
+    }
 
-		expect(request.getParameter("FirstName")).andReturn("");
+    @Test
+    public void testCheckError3() {
+        SampleAction action = new SampleAction();
+        HttpServletRequest request = createMock(HttpServletRequest.class);
 
-		replay(request);
-		boolean result = action.checkParameter(request);
-		verify(request);
+        expect(request.getParameter("FirstName")).andReturn("");
 
-		assertEquals(false, result);
-	}
+        replay(request);
+        boolean result = action.checkParameter(request);
+        verify(request);
 
-	@Test
-	public void testExecuteNormal() {
-		SampleAction action = new SampleAction("firstName", "lastName");
-		HttpServletRequest request = createMock(HttpServletRequest.class);
-		HttpSession session = createMock(HttpSession.class);
+        assertEquals(false, result);
+    }
 
-		expect(request.getSession(true)).andReturn(session);
+    @Test
+    public void testExecuteNormal() {
+        SampleAction action = new SampleAction("firstName", "lastName");
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        HttpSession session = createMock(HttpSession.class);
 
-		replay(request);
-		String result = action.execute(request);
-		verify(request);
+        expect(request.getSession(true)).andReturn(session);
 
-		assertTrue("./WEB-INF/result.jsp".equals(result));
-	}
+        replay(request);
+        String result = action.execute(request);
+        verify(request);
+
+        assertTrue("./WEB-INF/result.jsp".equals(result));
+    }
 }

@@ -1,11 +1,9 @@
 package jp.gihyo.jenkinsbook.dto;
 
-import java.io.Serializable;
-
 /**
  * DTO class for SampleServlet.
  */
-public class SampleDTO implements Serializable {
+public class SampleDTO  {
     /**
      * First name of the user.
      */
@@ -21,12 +19,12 @@ public class SampleDTO implements Serializable {
 
     /**
      * Store the user name.
-     * @param firstName first name of the user
-     * @param lastName last name of the user
+     * @param fName first name of the user
+     * @param lName last name of the user
      */
-    public SampleDTO(final String firstName, final String lastName) {
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
+    public SampleDTO(final String fName, final String lName) {
+        this.setFirstName(fName);
+        this.setLastName(lName);
         this.setMessage("Hello");
     }
 

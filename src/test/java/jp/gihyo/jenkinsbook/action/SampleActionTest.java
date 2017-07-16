@@ -93,5 +93,6 @@ public class SampleActionTest {
     
     @Test
     public void testError(){
+        System.out.println("aaa");
     }
 }

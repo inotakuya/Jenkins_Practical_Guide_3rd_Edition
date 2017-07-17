@@ -18,31 +18,50 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import jp.gihyo.jenkinsbook.action.SampleAction;
 
 public class SampleServletTest {
 
-    private SampleServlet sampleServlet;
+    @Mock
+    HttpServletRequest request;
+    
+    @Mock
+    HttpServletResponse response;
+    
+    @Mock
+    RequestDispatcher dispatcher;
+    
+    @InjectMocks
+    SampleServlet sampleServlet = new SampleServlet();
 
     @Before
     public void setUp() {
-        sampleServlet = new SampleServlet();
+        MockitoAnnotations.initMocks(this);
     }
-    
+
     @Test
     public void testDoGet() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
-        
-        RequestDispatcher dispatcher = mock(RequestDispatcher.class);
-        
+
+
         doNothing().when(dispatcher).forward(request, response);
         when(request.getRequestDispatcher("./WEB-INF/error.jsp")).thenReturn(dispatcher);
-        new SampleServlet().doGet(request, response);
-        
+        sampleServlet.doGet(request, response);
+
         verify(request).setCharacterEncoding("Shift_JIS");
-        verify(request,times(1)).getRequestDispatcher(anyString());
+        verify(request, times(1)).getRequestDispatcher(anyString());
+    }
+
+    @Test
+    public void doPostTest() throws Exception {
+        doNothing().when(dispatcher).forward(request, response);
+        when(request.getRequestDispatcher("./WEB-INF/error.jsp")).thenReturn(dispatcher);
+        when(request.getParameter("action")).thenReturn("hello");
+        sampleServlet.doPost(request, response);
+        verify(request, times(1)).setCharacterEncoding("Windows-31J");
     }
 
     @Test

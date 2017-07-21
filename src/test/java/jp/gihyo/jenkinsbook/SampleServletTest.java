@@ -1,103 +1,110 @@
 package jp.gihyo.jenkinsbook;
 
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-import org.powermock.api.mockito.PowerMockito;
+import org.junit.runner.RunWith;
 
 import jp.gihyo.jenkinsbook.action.SampleAction;
+import mockit.Deencapsulation;
+import mockit.Expectations;
+import mockit.Injectable;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
+import mockit.Tested;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 
+@RunWith(JMockit.class)
 public class SampleServletTest {
 
-    @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
+    @Mocked
+    HttpServletRequest req;
 
-    @Mock
-    HttpServletRequest request;
+    @Mocked
+    HttpServletResponse res;
 
-    @Mock
-    HttpServletResponse response;
+    @Mocked
+    RequestDispatcher requestDispatcher;
 
-    @Mock
-    RequestDispatcher dispatcher;
+    @Mocked
+    SampleAction sampleAction;
 
-    @Mock
-    HttpSession sesstion;
+    @Tested
+    SampleServlet servlet;
 
-    @InjectMocks
-    SampleServlet sampleServlet = PowerMockito.spy(new SampleServlet());
-
-    @Before
-    public void setUp() throws ServletException, IOException {
-        doNothing().when(dispatcher).forward(request, response);
-        doNothing().when(sesstion).setAttribute(anyString(), any());
-        when(request.getRequestDispatcher("./WEB-INF/error.jsp")).thenReturn(dispatcher);
-        when(request.getRequestDispatcher("./WEB-INF/result.jsp")).thenReturn(dispatcher);
-        when(request.getSession(true)).thenReturn(sesstion);
-
-    }
 
     @Test
-    public void testDoGet() throws Exception {
-        sampleServlet.doGet(request, response);
-
-        verify(request).setCharacterEncoding("Shift_JIS");
-        verify(request, times(1)).getRequestDispatcher(anyString());
-    }
+    public void testDoGet() throws Exception {}
 
     @Test
     public void doPostTest() throws Exception {
         
-        when(request.getParameter("action")).thenReturn(null);
-        sampleServlet.doPost(request, response);
+        servlet.doPost(req, res);
         
-        when(request.getParameter("action")).thenReturn("hel");
-        sampleServlet.doPost(request, response);
+        new Expectations() {
+            {
+                req.getParameter("action");
+                result = "actionName";
+              
+            }
+        };
+        
+        servlet.doPost(req, res);
 
-        when(request.getParameter("action")).thenReturn("hello");
-        sampleServlet.doPost(request, response);
+        new MockUp<SampleServlet>() {
+            @Mock
+            private SampleAction createAction(String name){
+                return sampleAction;
+            }
+        };
+
+        servlet.doPost(req, res);
         
-        when(request.getParameter("FirstName")).thenReturn("a");
-        when(request.getParameter("LastName")).thenReturn("b");
-        sampleServlet.doPost(request, response);
+        
+        new Expectations() {
+            {
+                sampleAction.checkParameter(req);
+                result = true;
+              
+            }
+        };
+        
+        servlet.doPost(req, res);
+        
+        new Verifications() {
+            {
+                req.setCharacterEncoding("Windows-31J");
+                times = 1;
+                requestDispatcher.forward(req, res);
+                times = 1;
+                sampleAction.checkParameter(req);
+                times = 1;
+            }
+
+        };
     }
 
     @Test
     public void testCreateAction() throws Exception {
-        String name = "hello";
-        String hel = "hel";
-        Class<SampleServlet> clazz = SampleServlet.class;
-        Method method = clazz.getDeclaredMethod("createAction", String.class);
-        method.setAccessible(true);
-        SampleAction result = (SampleAction) method.invoke(clazz.newInstance(), name);
-        assertThat(result, instanceOf(SampleAction.class));
+        SampleServlet s = new SampleServlet();
 
-        SampleAction result2 = (SampleAction) method.invoke(clazz.newInstance(), hel);
-        assertNull(result2);
-
+        SampleAction action = Deencapsulation.invoke(s, "createAction", "hello");
+        
+        assertThat(action, instanceOf(SampleAction.class));
+        
+        SampleAction result = Deencapsulation.invoke(s, "createAction", "hell");
+        
+        assertNull(result);
     }
+
 
 }
